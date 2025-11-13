@@ -24,6 +24,7 @@ class StaticGraphPrompt:
             "You are given an undirected graph in adjacency-list form (0-indexed).\n"
             f"Start node: {problem['start']}\n"
             "Neighbors must be explored in ascending numeric order for BFS.\n"
+            "In BFS traversal, each node should be visited only once at most.\n"
             "Return the traversal as space-separated node IDs only.\n"
         )
         prompt = f"{preface}\nGraph:\n{graph_txt}\n\nInstruction: {instruction}"

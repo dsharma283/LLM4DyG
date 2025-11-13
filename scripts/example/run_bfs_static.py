@@ -8,9 +8,9 @@ Run a single static-graph BFS instance end-to-end:
   - Print metrics
 """
 import argparse
-from llm4dyg_ext.static_data import StaticGraphGenER
-from llm4dyg_ext.bfs_task import BFSOrderTask
-from llm4dyg_ext.static_prompt import StaticGraphPrompt
+from static_bfs.static_data import StaticGraphGenER
+from static_bfs.bfs_task import BFSOrderTask
+from static_bfs.static_prompt import StaticGraphPrompt
 
 def parse_args():
     p = argparse.ArgumentParser()
@@ -32,19 +32,18 @@ def maybe_send_prompt(prompt_text, args):
     """
     Uses the repo's API helper if available; otherwise returns None.
     """
-    try:
-        from llm4dyg.utils.api import send_prompt
-        return send_prompt(
+    #try:
+    from llm4dyg.utils.api import send_prompt
+    return send_prompt(
+            args.model,
             prompt_text,
-            model=args.model,
             temperature=args.temperature,
-            max_tokens=args.max_tokens,
-            api_base=args.api_base,
-            api_key=args.api_key
-        )
-    except Exception as e:
-        print(f"[warn] Could not send prompt via repo API: {e}")
-        return None
+            max_tokens=args.max_tokens)
+            #api_base=args.api_base,
+            #api_key=args.api_key)
+    #except Exception as e:
+    #    print(f"[warn] Could not send prompt via repo API: {e}")
+    #    return None
 
 def main():
     args = parse_args()

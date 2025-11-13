@@ -51,16 +51,55 @@ class BFSOrderTask:
         }
         return {'problem': problem, 'answer': answer}
 
-    def evaluate(self, qa, model_output: str):
+    #def evaluate(self, qa, model_output: str):
+    #    """
+    #    Exact sequence match after extracting integers from model output.
+    #    Tolerates commas/newlines/extra text.
+    #    """
+    #    import re
+    #    gt = qa['answer'].strip().replace(",", " ")
+    #    pred = (model_output or "").strip().lower()
+    #    nums = re.findall(r"-?\d+", pred)
+    #    pred_seq = " ".join(nums)
+    #    ok = (pred_seq == gt)
+    #    return {'exact_match': float(ok), 'pred_seq': pred_seq, 'gt': gt}
+
+    def _to_text(self, x):
+        """Best-effort extraction of text from many common response shapes."""
+        if x is None:
+            return ""
+        if isinstance(x, str):
+            return x
+        if isinstance(x, dict):
+            # repo's own send_prompt() often returns {"content": "..."}
+            for k in ("content", "text", "output", "answer"):
+                v = x.get(k)
+                if isinstance(v, str):
+                    return v
+                # OpenAI-style
+                ch = x.get("choices")
+                if isinstance(ch, list) and ch:
+                    c0 = ch[0] or {}
+                    msg = c0.get("message") or {}
+                    if isinstance(msg, dict) and isinstance(msg.get("content"), str):
+                        return msg["content"]
+                    # some libs put text directly on the choice
+                    if isinstance(c0.get("text"), str):
+                        return c0["text"]
+        # fallback
+        return str(x)
+
+    def evaluate(self, qa, model_output):
         """
         Exact sequence match after extracting integers from model output.
-        Tolerates commas/newlines/extra text.
+        Tolerates commas/newlines/extra text and dict-shaped responses.
         """
         import re
         gt = qa['answer'].strip().replace(",", " ")
-        pred = (model_output or "").strip().lower()
-        nums = re.findall(r"-?\d+", pred)
+        pred_text = self._to_text(model_output).strip().lower()
+        nums = re.findall(r"-?\d+", pred_text)
         pred_seq = " ".join(nums)
         ok = (pred_seq == gt)
         return {'exact_match': float(ok), 'pred_seq': pred_seq, 'gt': gt}
+
 
