@@ -1,9 +1,17 @@
 from typing import Dict, List
 
 def _bfs_order(adj: Dict[int, List[int]], start: int = 0) -> List[int]:
-    """Deterministic BFS: neighbors in ascending order; covers disconnected graphs."""
+    """Deterministic BFS from a single start node.
+
+    - Respects ascending neighbor order (independent of input list ordering).
+    - Does **not** force traversal of disconnected components beyond the
+      one containing `start`, matching the problem instruction that BFS
+      begins at the given start node.
+    """
     N = len(adj)
-    visited = [False] * N
+    if N == 0:
+        return []
+    visited: List[bool] = [False] * N
     order: List[int] = []
     q: List[int] = []
 
@@ -11,24 +19,19 @@ def _bfs_order(adj: Dict[int, List[int]], start: int = 0) -> List[int]:
         visited[s] = True
         q.append(s)
 
+    # Guard against invalid start indices.
+    if start < 0 or start >= N:
+        return []
+
     push(start)
     head = 0
-    while True:
-        while head < len(q):
-            u = q[head]; head += 1
-            order.append(u)
-            for v in adj[u]:
-                if not visited[v]:
-                    push(v)
-        # next component (smallest unvisited)
-        nxt = -1
-        for i in range(N):
-            if not visited[i]:
-                nxt = i
-                break
-        if nxt == -1:
-            break
-        push(nxt)
+    while head < len(q):
+        u = q[head]; head += 1
+        order.append(u)
+        # Enforce ascending neighbour order regardless of how `adj` is stored.
+        for v in sorted(adj.get(u, [])):
+            if not visited[v]:
+                push(v)
     return order
 
 class BFSOrderTask:
