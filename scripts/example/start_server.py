@@ -27,6 +27,8 @@ elif model == "llama2-7b":
     model_path = "meta-llama/Llama-2-7b-chat-hf"
 elif model == "codellama2-13b":
     model_path = "codellama/CodeLlama-13b-Instruct-hf"
+elif model == "codellama2-34b":
+    model_path = "codellama/CodeLlama-34b-Instruct-hf"
 elif model == "llama-4":
     model_path = "meta-llama/Llama-4-Scout-17B-16E-Instruct"
 elif model == "chatglm2-6b":
