@@ -2,13 +2,13 @@ from argparse import ArgumentParser
 import os
 import json
 """Usage: Host Model
-python start_server.py --model codellama2-13b -t run --device 0
+python start_server.py --model llama-4 -t run --device 0
 """
 """Usage: Clear Model
-python start_server.py --model codellama2-13b -t clear --device 0
+python start_server.py --model llama-4 -t clear --device 0
 """
 parser = ArgumentParser()
-parser.add_argument("--model", type=str, default="codellama2-13b")
+parser.add_argument("--model", type=str, default="llama-4")
 parser.add_argument("-t", type=str, default="clear", choices="run clear".split())
 parser.add_argument("--device", type=str, default="0")
 args = parser.parse_args()
@@ -27,7 +27,8 @@ elif model == "llama2-7b":
     model_path = "meta-llama/Llama-2-7b-chat-hf"
 elif model == "codellama2-13b":
     model_path = "codellama/CodeLlama-13b-Instruct-hf"
-    # model_path = os.path.join(ROOT, model_path)
+elif model == "llama-4":
+    model_path = "meta-llama/Llama-4-Scout-17B-16E-Instruct"
 elif model == "chatglm2-6b":
     model_path = "zai-org/chatglm2-6b"
     model_path = os.path.join(ROOT, model_path)

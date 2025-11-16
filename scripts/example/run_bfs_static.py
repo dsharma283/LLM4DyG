@@ -18,7 +18,7 @@ def parse_args():
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--start", type=int, default=0)
     # model args (reuse repo API if present)
-    p.add_argument("--model", type=str, default="gpt-4o")
+    p.add_argument("--model", type=str, default="llama-4")
     p.add_argument("--temperature", type=float, default=0.0)
     p.add_argument("--max_tokens", type=int, default=128)
     p.add_argument("--api_base", type=str, default=None)
