@@ -1,8 +1,6 @@
 from typing import Dict, List
-
 def _bfs_order(adj: Dict[int, List[int]], start: int = 0) -> List[int]:
     """Deterministic BFS from a single start node.
-
     - Respects ascending neighbor order (independent of input list ordering).
     - Does **not** force traversal of disconnected components beyond the
       one containing `start`, matching the problem instruction that BFS
@@ -14,15 +12,12 @@ def _bfs_order(adj: Dict[int, List[int]], start: int = 0) -> List[int]:
     visited: List[bool] = [False] * N
     order: List[int] = []
     q: List[int] = []
-
     def push(s: int):
         visited[s] = True
         q.append(s)
-
     # Guard against invalid start indices.
     if start < 0 or start >= N:
         return []
-
     push(start)
     head = 0
     while head < len(q):
@@ -33,7 +28,6 @@ def _bfs_order(adj: Dict[int, List[int]], start: int = 0) -> List[int]:
             if not visited[v]:
                 push(v)
     return order
-
 class BFSOrderTask:
     """
     Task to produce BFS traversal of a static graph.
@@ -42,7 +36,6 @@ class BFSOrderTask:
     """
     def __init__(self, start: int = 0):
         self.start = start
-
     def generate_qa(self, info):
         adj = info['adj']
         gt = _bfs_order(adj, self.start)
@@ -53,7 +46,6 @@ class BFSOrderTask:
             'start': self.start
         }
         return {'problem': problem, 'answer': answer}
-
     #def evaluate(self, qa, model_output: str):
     #    """
     #    Exact sequence match after extracting integers from model output.
@@ -66,7 +58,6 @@ class BFSOrderTask:
     #    pred_seq = " ".join(nums)
     #    ok = (pred_seq == gt)
     #    return {'exact_match': float(ok), 'pred_seq': pred_seq, 'gt': gt}
-
     def _to_text(self, x):
         """Best-effort extraction of text from many common response shapes."""
         if x is None:
@@ -91,7 +82,6 @@ class BFSOrderTask:
                         return c0["text"]
         # fallback
         return str(x)
-
     def evaluate(self, qa, model_output):
         """
         Exact sequence match after extracting integers from model output.
@@ -104,5 +94,3 @@ class BFSOrderTask:
         pred_seq = " ".join(nums)
         ok = (pred_seq == gt)
         return {'exact_match': float(ok), 'pred_seq': pred_seq, 'gt': gt}
-
-

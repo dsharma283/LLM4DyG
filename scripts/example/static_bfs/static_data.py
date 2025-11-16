@@ -1,6 +1,5 @@
 import random
 from typing import Dict, List, Tuple
-
 class StaticGraphGenER:
     """
     Erdős–Rényi G(N, p) static graph generator (undirected).
@@ -25,4 +24,3 @@ class StaticGraphGenER:
         for i in range(N):
             adj[i].sort()
         return {'N': N, 'edges': edges, 'adj': adj}
-

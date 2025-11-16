@@ -5,7 +5,6 @@ def send_to_chat(
 ) -> str:
     openai.api_key = "EMPTY"
     openai.api_base = "http://localhost:8000/v1"
-
     response = openai.ChatCompletion.create(
         model=model, messages=messages, temperature=temperature, max_tokens=max_tokens
     )
@@ -13,7 +12,6 @@ def send_to_chat(
     d = response['usage'].to_dict()
     d['content'] = response_content
     return d
-
 def send_to_chat_gpt(
     model: str, messages: str, max_tokens: int = 2048, temperature: float = 0.5
 ) -> str:
@@ -25,7 +23,6 @@ def send_to_chat_gpt(
     d = response['usage'].to_dict()
     d['content'] = response_content
     return d
-
 def send_to_chat_gpt_intruct(
     model: str, messages: str, max_tokens: int = 2048, temperature: float = 0.5
 ) -> str:
@@ -38,12 +35,11 @@ def send_to_chat_gpt_intruct(
         prompt=messages[0]['content'],
         temperature=temperature,
         max_tokens=max_tokens,
-    ) 
+    )
     response_content = response.choices[0].text
     d = response['usage'].to_dict()
     d['content'] = response_content
     return d
-
 def send_prompt(model, prompt, *args, **kwargs):
     messages = [
             {

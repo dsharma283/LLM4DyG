@@ -10,7 +10,6 @@ from .when_tclosure import DyGraphTaskWhenTClosure
 from .sort_edge import DyGraphTaskSortEdge
 from .when_connect import DyGraphTaskWhenConnect
 from .link_pred import DyGraphTaskLinkPred
-
 def load_task(task, args):
     if task == "num_time":
         return DyGraphTaskNumTime(task, args)
@@ -38,9 +37,8 @@ def load_task(task, args):
         return DyGraphTaskLinkPred(task, args)
     else:
         raise NotImplementedError(f"{task} not implemented")
-    
 import math
-import json  
+import json
 from llm4dyg.utils.task.find_tpath import judge_path
 from itertools import permutations, combinations
 import numpy as np
@@ -49,21 +47,16 @@ from tqdm import tqdm
 def get_random_base(task, T, N, get_task_folder):
     """
     Calculate the random base for a given task.
-
     Args:
         task (str): The task for which to calculate the random base.
         T (int): The total number of elements for the task.
         N (int): The total number of nodes for the task.
-        get_task_folder (function): to get the root folder of the task 
-
+        get_task_folder (function): to get the root folder of the task
     Returns:
         float: The calculated random base for the given task.
-
     Raises:
         ValueError: If the task is not recognized.
-
     """
-    
     if task == 'when_link':
         combinations = sum(math.comb(T, i) for i in range(1, T+1))
         num_solution = combinations
@@ -90,26 +83,22 @@ def get_random_base(task, T, N, get_task_folder):
         def generate_solutions(context, num_nodes, n1):
             l1 = np.arange(num_nodes)
             l1 = l1[l1!= n1]
-            
             iters = [[n1] + list(x)  for x in permutations(l1, 2)]
             num = 0
             for path in iters:
                 judge = judge_path(context, path)
-                num += judge 
+                num += judge
             return num
         def get_base(task_folder, folder_name):
             folder_path = os.path.join(task_folder, folder_name)
             file_path = os.path.join(folder_path, "qa.json")
             graph_path = os.path.join(folder_path, f"graph.json")
-            
             graph = json.load(open(graph_path, "r"))
             qa= json.load(open(file_path, "r"))
             T, N, p = graph['T'], graph['N'], graph['p']
             num_space = math.perm(N, 2)
             num_solution = generate_solutions(qa['context'], N, qa['query'][0])
             return num_solution/num_space, N
-        
-        
         task_folder = get_task_folder(task)
         files = json.load(open(os.path.join(task_folder, "prompt_files.json"), "r"))["files"]
         bases = []
@@ -119,13 +108,11 @@ def get_random_base(task, T, N, get_task_folder):
                 bases.append(base[0])
         bases = np.array(bases).mean()
         return bases
-    
     if task == 'sort_edge':
         def get_base(task_folder, folder_name):
             folder_path = os.path.join(task_folder, folder_name)
             file_path = os.path.join(folder_path, "qa.json")
             graph_path = os.path.join(folder_path, f"graph.json")
-            
             graph = json.load(open(graph_path, "r"))
             qa= json.load(open(file_path, "r"))
             T, N, p = graph['T'], graph['N'], graph['p']
@@ -137,8 +124,6 @@ def get_random_base(task, T, N, get_task_folder):
             for t in ts:
                 num_solution += math.perm(len(context[context[:, 2] == t]), len(context[context[:, 2] == t]))
             return num_solution/num_space, N
-        
-        
         task_folder = get_task_folder(task)
         files = json.load(open(os.path.join(task_folder, "prompt_files.json"), "r"))["files"]
         bases = []

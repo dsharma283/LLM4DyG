@@ -7,7 +7,6 @@ class StaticGraphPrompt:
     def __init__(self, obj_task, args=None):
         self.obj_task = obj_task
         self.args = args
-
     def _format_graph(self, problem):
         lines = []
         N = problem['N']
@@ -16,7 +15,6 @@ class StaticGraphPrompt:
             nbrs = " ".join(map(str, adj[u]))
             lines.append(f"{u}: {nbrs}")
         return "\n".join(lines)
-
     def generate_prompt_qa(self, problem, answer):
         graph_txt = self._format_graph(problem)
         instruction = "Generate the Breath First Search traversal of this graph"
@@ -29,4 +27,3 @@ class StaticGraphPrompt:
         )
         prompt = f"{preface}\nGraph:\n{graph_txt}\n\nInstruction: {instruction}"
         return {'prompt': prompt, 'answer': answer}
-

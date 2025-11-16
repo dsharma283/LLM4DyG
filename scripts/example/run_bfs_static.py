@@ -11,7 +11,6 @@ import argparse
 from static_bfs.static_data import StaticGraphGenER
 from static_bfs.bfs_task import BFSOrderTask
 from static_bfs.static_prompt import StaticGraphPrompt
-
 def parse_args():
     p = argparse.ArgumentParser()
     p.add_argument("--N", type=int, default=10)
@@ -27,7 +26,6 @@ def parse_args():
     p.add_argument("--dry_run", action="store_true",
                    help="Do not call model; just print prompt and GT answer.")
     return p.parse_args()
-
 def maybe_send_prompt(prompt_text, args):
     """
     Uses the repo's API helper if available; otherwise returns None.
@@ -44,34 +42,26 @@ def maybe_send_prompt(prompt_text, args):
     #except Exception as e:
     #    print(f"[warn] Could not send prompt via repo API: {e}")
     #    return None
-
 def main():
     args = parse_args()
     gen = StaticGraphGenER()
     task = BFSOrderTask(start=args.start)
     prompter = StaticGraphPrompt(task, args=args)
-
     info = gen.sample_graph(N=args.N, p=args.p, seed=args.seed)
     qa = task.generate_qa(info)
     prompt_qa = prompter.generate_prompt_qa(**qa)
-
     print("=== PROMPT ===")
     print(prompt_qa['prompt'])
     print("\n=== GROUND TRUTH ANSWER ===")
     print(qa['answer'])
-
     if args.dry_run:
         return
-
     model_output = maybe_send_prompt(prompt_qa['prompt'], args)
     print("\n=== MODEL RAW OUTPUT ===")
     print(model_output)
-
     metrics = task.evaluate(qa, model_output)
     print("\n=== METRICS ===")
     for k, v in metrics.items():
         print(f"{k}: {v}")
-
 if __name__ == "__main__":
     main()
-
