@@ -21,21 +21,21 @@ ROOT = "" # local model root path
 
 model = args.model
 if model == "vicuna-7b":
-    model_path = "vicuna-7b-v1.5"
+    model_path = "lmsys/vicuna-7b-v1.5"
     model_path = os.path.join(ROOT, model_path)
 elif model == "vicuna-13b":
-    model_path = "vicuna-13b-v1.5"
+    model_path = "lmsys/vicuna-13b-v1.5"
     model_path = os.path.join(ROOT, model_path)
 elif model == "llama2-13b":
-    model_path = "llama-2-13b"
+    model_path = "meta-llama/Llama-2-13b-chat-hf"
     model_path = os.path.join(ROOT, model_path)
 elif model == "llama2-7b":
-    model_path = "NousResearch/Llama-2-7b-chat-hf"
+    model_path = "meta-llama/Llama-2-7b-chat-hf"
 elif model == "codellama2-13b":
     model_path = "codellama/CodeLlama-13b-Instruct-hf"
     # model_path = os.path.join(ROOT, model_path)
 elif model == "chatglm2-6b":
-    model_path = "chatglm2-6b"
+    model_path = "zai-org/chatglm2-6b"
     model_path = os.path.join(ROOT, model_path)
 else:
     # or you can add your own model here
